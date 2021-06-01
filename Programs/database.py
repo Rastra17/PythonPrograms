@@ -4,17 +4,39 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="rastra9860009091",
-    database="TestDataBase"
+    password="root"
 )
 
 #Creating a cursor
 my_cursor=mydb.cursor()
 
 #Creating a database
-'''
-my_cursor.execute("CREATE DATABASE TestDataBase;")
-'''
+db=("prototype",)
+try:
+    my_cursor.execute("CREATE DATABASE IF NOT EXISTS (%s);",db[0])
+except:
+    print("Database already exists!")
+else:
+    print(mydb)
+finally:
+    print("Attempt to create database has been completed!")
+
+#Closing the cursor
+my_cursor.close()
+
+#Closing database after creation
+mydb.close()
+
+#Connecting to database again but with database specified
+mydb=mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="root",
+    database=db[0]
+)
+
+#Creating a cursor again
+my_cursor=mydb.cursor()
 
 #Executing command to show Databases
 '''
@@ -24,12 +46,19 @@ for db in my_cursor:
 '''
 
 #Creating Table and its columns
-'''
-my_cursor.execute("CREATE TABLE users(name VARCHAR(255),"
-                  "email VARCHAR(255),"
-                  "age INTEGER(10),"
-                  "user_id INTEGER AUTO_INCREMENT Primary KEY);")
-'''
+try:
+    my_cursor.execute("CREATE TABLE IF NOT EXISTS modules(name VARCHAR(255),"
+                      "email VARCHAR(255),"
+                      "age INTEGER(10),"
+                      "user_id INTEGER AUTO_INCREMENT Primary KEY);")
+except Exception as er:
+    print(er)
+else:
+    my_cursor.execute("SHOW TABLES")
+    for table in my_cursor:
+        print("Tables: ",table[0])
+finally:
+    print("Attempt to create table had been completed!")
 
 #Executing command to show table
 '''
@@ -49,13 +78,14 @@ my_cursor.execute(insert,record)
 '''
 
 #Showing the contents of a table
+'''
 my_cursor.execute("SELECT name,email,age FROM TestDataBase.users;")
 result = my_cursor.fetchall()
 for row in result:
     print(row)
     print("\n")
+'''
 
 #Saving data into the database
-'''
 mydb.commit()
-'''
+mydb.close()

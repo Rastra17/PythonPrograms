@@ -11,46 +11,70 @@ flag=False
 #Main GUI for the System
 manage=Tk()
 manage.title("Bank Management System")
+manage.configure(bg="cornflower blue")
 
-#Connecting python to TestDataBase database of 'root' user
+#Connecting python to MySQL Server
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="rastra9860009091",
-    database="Management"
+    password="root"
 )
 
 #Creating a cursor
 my_cursor=mydb.cursor()
 
-#Creating a database
-'''
-my_cursor.execute("CREATE DATABASE Management;")
-'''
+#Creating a database with global tuple
+db=("Management",)
+try:
+    my_cursor.execute("CREATE DATABASE IF NOT EXISTS (%s);",db[0])
+except:
+    pass
+
+#Closing the cursor and database
+my_cursor.close()
+mydb.close()
+
+#Connecting to MySQL Server with Database
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="root",
+    database=db[0]
+)
+
+#Creating the cursor again
+my_cursor=mydb.cursor()
 
 #Creating Table and its columns
-'''
-my_cursor.execute("CREATE TABLE users(name VARCHAR(255),"
-                  "email VARCHAR(255),"
-                  "password VARCHAR(255),"
-                  "user_id INTEGER AUTO_INCREMENT Primary KEY);")
-'''
+table=("users",)
+try:
+    my_cursor.execute("CREATE TABLE IF NOT EXISTS (%s)(name VARCHAR(255),"
+                      "email VARCHAR(255),"
+                      "password VARCHAR(255),"
+                      "balance INTEGER(10)"
+                      "user_id INTEGER AUTO_INCREMENT Primary KEY);",table[0])
+except:
+    pass
+
+#Label for Main GUI
+heading=Label(manage,text="Bank Management",font=("Times",20,"bold"),bg="cornflower blue")
+heading.grid(row=0,column=1)
 
 #Labels for Register Entries
-username=Label(manage,text="Username",font=18)
-username.grid(row=0,column=0)
-email=Label(manage,text="Email:",font=18)
-email.grid(row=1,column=0)
-password=Label(manage,text="Password:",font=18)
-password.grid(row=2,column=0)
+username=Label(manage,text="Username",font=18,bg="cornflower blue")
+username.grid(row=1,column=0)
+email=Label(manage,text="Email:",font=18,bg="cornflower blue")
+email.grid(row=2,column=0)
+password=Label(manage,text="Password:",font=18,bg="cornflower blue")
+password.grid(row=3,column=0)
 
 #Entries for Registration
 Entry_username=Entry(manage,width=25,borderwidth=5)
-Entry_username.grid(row=0,column=1)
+Entry_username.grid(row=1,column=1)
 Entry_email=Entry(manage,width=25,borderwidth=5)
-Entry_email.grid(row=1,column=1)
+Entry_email.grid(row=2,column=1)
 Entry_password=Entry(manage,width=25,borderwidth=5)
-Entry_password.grid(row=2,column=1)
+Entry_password.grid(row=3,column=1)
 
 def show_records():
     global iteration
@@ -59,61 +83,71 @@ def show_records():
 
     # Creating a tree view for database
     my_tree = ttk.Treeview(showrec)
-    my_tree['columns'] = ("Names", "Emails", "Passwords", "User IDs")
+    my_tree['columns'] = ("Account No.","Names", "Emails", "Balance")
 
     # Formatting the columns
     my_tree.column("#0", width=0, stretch=NO)
+    my_tree.column("Account No.", width=100, minwidth=30, anchor=CENTER)
     my_tree.column("Names", width=100, minwidth=25)
     my_tree.column("Emails", width=150, minwidth=25)
-    my_tree.column("Passwords", width=120, minwidth=25, anchor=CENTER)
-    my_tree.column("User IDs", width=60, minwidth=25, anchor=CENTER)
+    my_tree.column("Balance", width=120, minwidth=25, anchor=CENTER)
 
     # Headings of Tree columns
     my_tree.heading("#0", text="")
+    my_tree.heading("Account No.", text="Account No.")
     my_tree.heading("Names", text="Names")
     my_tree.heading("Emails", text="Emails")
-    my_tree.heading("Passwords", text="Passwords")
-    my_tree.heading("User IDs", text="User IDs")
+    my_tree.heading("Balance", text="Balance")
 
     # Adding data into the tree
-    my_cursor.execute("SELECT name,email,password,user_id FROM Management.users;")
+    my_cursor.execute("SELECT name,email,balance,user_id FROM Management.users;")
     result = my_cursor.fetchall()
     for row in result:
-        my_tree.insert(parent='', index='end', iid=iteration, text="",
-                       values=(row[counter], row[counter + 1], "********", iteration+1))
-        iteration = iteration + 1
+        if(row[counter+2]==None):
+            my_tree.insert(parent='', index='end', iid=iteration, text="",
+                           values=(row[counter + 3], row[counter], row[counter + 1], "N/A"))
+            iteration = iteration + 1
+        else:
+            my_tree.insert(parent='', index='end', iid=iteration, text="",
+                           values=(row[counter + 3], row[counter], row[counter + 1], row[counter + 2]))
+            iteration = iteration + 1
     my_tree.grid(row=1, column=0)
+    iteration=0
     showrec.mainloop()
-
 
 #Inserting data into the table
 def registration():
     global flag
     global counter
     insert = "INSERT INTO users(name,email,password) VALUES (%s,%s,%s);"
-    record = (Entry_username.get(), Entry_email.get(), Entry_password.get(),)
+    record = (Entry_username.get(), Entry_email.get(), Entry_password.get())
     my_cursor.execute("SELECT name, email, password FROM Management.users;")
     result = my_cursor.fetchall()
     if (Entry_username.get() != "" or Entry_email.get() != "" or Entry_password.get() != ""):
         for row in result:
-            flag = False
             if(Entry_email.get()==row[counter+1]):
-                messagebox.showinfo("Failed!", "Entry already exists!")
+                messagebox.showinfo("Failed!", "     Entry already exists!      ")
+                break
+            elif('@' not in Entry_email.get()):
+                messagebox.showinfo("Failed","         Invalid Email!         ")
                 break
             else:
-                flag=True
-        if(flag):
+                pass
+        else:
             my_cursor.execute(insert, record)
             mydb.commit()
             Entry_username.delete(0, 'end')
             Entry_email.delete(0, 'end')
             Entry_password.delete(0, 'end')
             Entry_username.focus_set()
-            messagebox.showinfo("Successful", "Registration Completed!")
+            messagebox.showinfo("Successful", "     Registration Completed!    ")
     else:
-            messagebox.showinfo("Failed!", "Empty Fields")
+            messagebox.showinfo("Failed!", "          Empty Fields!         ")
     counter=0
     flag=False
+
+#Declaring Empty Label to store data in global scope
+bal0=Label()
 
 #Logging in the user
 def login():
@@ -121,66 +155,178 @@ def login():
     global flag
     my_cursor.execute("SELECT name, email, password FROM Management.users;")
     result = my_cursor.fetchall()
+
     if (Entry_username.get() != "" or Entry_email.get() != "" or Entry_password.get() != ""):
         for row in result:
             flag=False
             if (Entry_username.get() == row[counter] and Entry_email.get() == row[
-                counter + 1] and Entry_password.get() == row[counter + 2]):
+                counter + 1] and Entry_password.get() == row[counter + 2] and '@' in Entry_email.get()):
                 flag=True
                 break
         if(flag):
-            Entry_username.delete(0, 'end')
-            Entry_email.delete(0, 'end')
-            Entry_password.delete(0, 'end')
-            Entry_username.focus_set()
+
+            # Tuple for permanent storage of entries
+            entries = (Entry_email.get(), Entry_password.get())
+
+            logged = Tk()
+            logged.title("Welcome User!")
+            logged.configure(bg="salmon1")
+
             messagebox.showinfo("Logged in!", "You have logged in successfully!")
+            temp = (entries[0],)
+            my_cursor.execute("SELECT name FROM Management.users WHERE email=(%s)", temp)
+            resultone = my_cursor.fetchone()
+
+            Title = Label(logged, text="Welcome " + resultone[0] + "!", font=("Times", 20, "bold"),bg="salmon1")
+            Title.grid(row=0, column=1)
+
+            my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
+            resultone = my_cursor.fetchone()
+            if(resultone[0]==None):
+                bal0 = Label(logged, text="Balance: N/A", font=18,bg="salmon1")
+                bal0.grid(row=1, column=0)
+            else:
+                bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18,bg="salmon1")
+                bal0.grid(row=1, column=0)
+
+            # Labels and Entries for logged-in users
+            bala = Label(logged, text="Transaction:", font=18,bg="salmon1")
+            bala.grid(row=2, column=0)
+            balance = Entry(logged, width=25, borderwidth=5)
+            balance.grid(row=2, column=1)
+            rpassw = Label(logged, text="Reset Password:", font=18,bg="salmon1")
+            rpassw.grid(row=3, column=0)
+            rpas = Entry(logged, width=25, borderwidth=5)
+            rpas.grid(row=3, column=1)
+
+            # Function to deposit
+            def deposit():
+                global bal0
+                bal0.destroy()
+                if (int(balance.get()) > 0):
+                    bal = balance.get()
+                    erms = (entries[0], entries[1])
+                    my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s) AND password=(%s);",
+                                      erms)
+                    resul = my_cursor.fetchone()
+                    if (resul[0] == None):
+                        sel = (bal, entries[0], entries[1])
+                        my_cursor.execute(
+                            "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", sel)
+                        mydb.commit()
+                        my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
+                        resultone = my_cursor.fetchone()
+                        bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18,bg="firebrick1")
+                        bal0.grid(row=1, column=0)
+                        messagebox.showinfo("Successful!", "Added Balance to Account!")
+                    elif (int(balance.get()) > 0):
+                        bal = int(bal)
+                        resul = resul[0]
+                        resul = int(resul)
+                        sum = resul + bal
+                        update = (sum, entries[0], entries[1])
+                        my_cursor.execute(
+                            "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", update)
+                        mydb.commit()
+                        my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
+                        resultone = my_cursor.fetchone()
+                        bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18,bg="firebrick1")
+                        bal0.grid(row=1, column=0)
+                        messagebox.showinfo("Successful!", "Updated Balance to Account!")
+                    else:
+                        messagebox.showinfo("Warning", "Something went wrong!")
+                else:
+                    messagebox.showinfo("Warning", "Enter a number!")
+
+            # Function to withdraw
+            def withdraw():
+                global bal0
+                bal0.destroy()
+                if (int(balance.get()) > 0):
+                    bal = balance.get()
+                    erms = (entries[0], entries[1])
+                    my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s) AND password=(%s);",
+                                      erms)
+                    resul = my_cursor.fetchone()
+                    if (resul[0] == None):
+                        bal = bal * -1
+                        sel = (bal, entries[0], entries[1])
+                        my_cursor.execute(
+                            "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", sel)
+                        mydb.commit()
+                        bal0 = Label(logged, text="Balance: " + str(resul[0]), font=18)
+                        bal0.grid(row=1, column=0)
+                        messagebox.showinfo("Successful!", "Updated Balance from Account!")
+                    elif (int(balance.get()) > 0 and int(balance.get())<=resul[0]):
+                        bal = int(bal)
+                        resul = resul[0]
+                        resul = int(resul)
+                        sum = resul - bal
+                        update = (sum, entries[0], entries[1])
+                        my_cursor.execute(
+                            "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", update)
+                        mydb.commit()
+                        my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
+                        resultone = my_cursor.fetchone()
+                        bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18)
+                        bal0.grid(row=1, column=0)
+                        messagebox.showinfo("Successful!", "Updated Balance from Account!")
+                    else:
+                        messagebox.showinfo("Warning", "Not Enough Balance")
+                else:
+                    messagebox.showinfo("Warning", "Enter a number!")
+
+            # Deleting records from database
+            def delete():
+                erms = (entries[0], entries[1])
+                my_cursor.execute("DELETE FROM Management.users WHERE email=(%s) AND password=(%s);", erms)
+                mydb.commit()
+                messagebox.showinfo("Successful!", "Deleted account successfully!")
+                logged.destroy()
+
+            # Resetting the password
+            def reset():
+                erms = (rpas.get(), entries[0], entries[1])
+                my_cursor.execute("UPDATE Management.users SET password=(%s) WHERE email=(%s) AND password=(%s);",
+                                  erms)
+                mydb.commit()
+                messagebox.showinfo("Successful!", "The password has been reset!")
+
+            # Empty Labels to configure Buttons
+            Label1 = Label(logged, text="",bg="salmon1")
+            Label1.grid(row=4, column=1)
+            Label2=Label(logged,text="",bg="salmon1")
+            Label2.grid(row=6,column=1)
+
+            #Buttons for logged in users
+            dele = Button(logged, text="Delete", command=delete,padx=2,pady=2,bg="dark sea green")
+            dele.grid(row=7, column=1)
+            withd = Button(logged, text="Withdraw", command=withdraw,padx=2,pady=2,bg="dark sea green")
+            withd.grid(row=5, column=0)
+            depo = Button(logged, text="Deposit", command=deposit,padx=2,pady=2,bg="dark sea green")
+            depo.grid(row=5, column=1)
+            Reset = Button(logged, text="Reset", command=reset,padx=2,pady=2,bg="dark sea green")
+            Reset.grid(row=5, column=2)
+            logged.mainloop()
         else:
-            messagebox.showinfo("Failed!", "Record does not exist!")
+            messagebox.showinfo("Warning!", "Invalid Login!")
 
     else:
-        messagebox.showinfo("Failed!", "Empty Fields")
+        messagebox.showinfo("Failed!", "          Empty Fields!         ")
     counter=0
     flag=False
 
-#Deleting records from database
-def delete():
-    global counter
-    global flag
-    my_cursor.execute("SELECT name, email, password FROM Management.users;")
-    result = my_cursor.fetchall()
-    if (Entry_username.get() != "" or Entry_email.get() != "" or Entry_password.get() != ""):
-        for row in result:
-            flag=False
-            if (Entry_username.get() == row[counter] and Entry_email.get() == row[
-                counter + 1] and Entry_password.get() == row[counter + 2]):
-                flag=True
-                break
-        if(flag):
-            delet = "DELETE FROM Management.users WHERE Management.users.email = (%s);"
-            frm = (Entry_email.get(),)
-            my_cursor.execute(delet,frm)
-            mydb.commit()
-            Entry_username.delete(0, 'end')
-            Entry_email.delete(0, 'end')
-            Entry_password.delete(0, 'end')
-            Entry_username.focus_set()
-            messagebox.showinfo("Successful!", "Deleted record!")
-        else:
-            messagebox.showinfo("Failed!","Record does not exist!")
-    else:
-        messagebox.showinfo("Warning!","Empty Fields!")
-    counter=0
-    flag=False
+#Empty Labels to configure Buttons
+Label1=Label(manage,text="",bg="cornflower blue")
+Label1.grid(row=4,column=1)
 
 #Button(s) for GUI
-regis=Button(manage,text="Register",command=registration)
-regis.grid(row=3,column=0)
-log=Button(manage,text="Login",command=login)
-log.grid(row=4,column=0)
-rec=Button(manage,text="Show Records",command=show_records)
-rec.grid(row=3,column=1)
-dele=Button(manage,text="Delete",command=delete)
-dele.grid(row=4,column=1)
+regis=Button(manage,text="Register",command=registration,padx=2,pady=2,bg="blanched almond")
+regis.grid(row=5,column=1)
+log = Button(manage, text="Login", command=login,padx=2,pady=2,bg="blanched almond")
+log.grid(row=5,column=2)
+rec=Button(manage,text="Show Records",command=show_records,padx=2,pady=2,bg="blanched almond")
+rec.grid(row=5,column=0)
 
 #Putting main GUI in a loop
 manage.mainloop()
