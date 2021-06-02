@@ -26,7 +26,11 @@ mydb = mysql.connector.connect(
     password="root",
     database=db[0]
 )
+
+#Creating a cursor again to strengthen it
 my_cursor=mydb.cursor()
+
+#Trying to create table if it does not exists.
 try:
     my_cursor.execute("CREATE TABLE IF NOT EXISTS users(name VARCHAR(255),"
                       "email VARCHAR(255),"
@@ -40,4 +44,6 @@ else:
     result=my_cursor.fetchall()
     for row in result:
         print(row)
+
+#CLosing the database after work.
 mydb.close()
