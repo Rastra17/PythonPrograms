@@ -21,14 +21,17 @@ mydb = mysql.connector.connect(
 #Creating a cursor
 my_cursor=mydb.cursor()
 
-#Creating a database with global tuple
+#Creating a database
 db=("Management",)
 try:
-    my_cursor.execute("CREATE DATABASE IF NOT EXISTS (%s);",db)
-except:
+    my_cursor.execute("CREATE DATABASE IF NOT EXISTS Management;")
+except Exception as e:
+    print("Something went wrong!",e)
     pass
+else:
+    print(mydb)
 
-#Connecting to MySQL Server with Database
+#Connecting to MySQL Server with tuple
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -40,15 +43,20 @@ mydb = mysql.connector.connect(
 my_cursor=mydb.cursor()
 
 #Creating Table and its columns
-table=("users",)
 try:
-    my_cursor.execute("CREATE TABLE IF NOT EXISTS (%s)(name VARCHAR(255),"
+    my_cursor.execute("CREATE TABLE IF NOT EXISTS users(name VARCHAR(255),"
                       "email VARCHAR(255),"
                       "password VARCHAR(255),"
-                      "balance INTEGER(10)"
-                      "user_id INTEGER AUTO_INCREMENT Primary KEY);",table)
-except:
+                      "balance INTEGER(10),"
+                      "user_id INTEGER AUTO_INCREMENT Primary KEY);")
+except Exception as e:
+    print("Something went wrong!",e)
     pass
+else:
+    my_cursor.execute("SHOW TABLES;")
+    result=my_cursor.fetchall()
+    for row in result:
+        print(row)
 
 #Label for Main GUI
 heading=Label(manage,text="Bank Management",font=("Times",20,"bold"),bg="cornflower blue")
