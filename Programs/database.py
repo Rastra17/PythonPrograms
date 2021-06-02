@@ -13,19 +13,13 @@ my_cursor=mydb.cursor()
 #Creating a database
 db=("prototype",)
 try:
-    my_cursor.execute("CREATE DATABASE IF NOT EXISTS (%s);",db[0])
+    my_cursor.execute("CREATE DATABASE IF NOT EXISTS (%s);",db)
 except:
     print("Database already exists!")
 else:
     print(mydb)
 finally:
     print("Attempt to create database has been completed!")
-
-#Closing the cursor
-my_cursor.close()
-
-#Closing database after creation
-mydb.close()
 
 #Connecting to database again but with database specified
 mydb=mysql.connector.connect(

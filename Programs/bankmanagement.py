@@ -3,9 +3,7 @@ import mysql.connector
 from tkinter import messagebox
 from tkinter import ttk
 
-#Global variables to assist the program
-counter=0
-iteration=0
+#Global variable(s) to assist the program
 flag=False
 
 #Main GUI for the System
@@ -26,13 +24,9 @@ my_cursor=mydb.cursor()
 #Creating a database with global tuple
 db=("Management",)
 try:
-    my_cursor.execute("CREATE DATABASE IF NOT EXISTS (%s);",db[0])
+    my_cursor.execute("CREATE DATABASE IF NOT EXISTS (%s);",db)
 except:
     pass
-
-#Closing the cursor and database
-my_cursor.close()
-mydb.close()
 
 #Connecting to MySQL Server with Database
 mydb = mysql.connector.connect(
@@ -42,7 +36,7 @@ mydb = mysql.connector.connect(
     database=db[0]
 )
 
-#Creating the cursor again
+#Creating a cursor again
 my_cursor=mydb.cursor()
 
 #Creating Table and its columns
@@ -52,7 +46,7 @@ try:
                       "email VARCHAR(255),"
                       "password VARCHAR(255),"
                       "balance INTEGER(10)"
-                      "user_id INTEGER AUTO_INCREMENT Primary KEY);",table[0])
+                      "user_id INTEGER AUTO_INCREMENT Primary KEY);",table)
 except:
     pass
 
@@ -77,9 +71,9 @@ Entry_password=Entry(manage,width=25,borderwidth=5)
 Entry_password.grid(row=3,column=1)
 
 def show_records():
-    global iteration
     showrec = Tk()
     showrec.title("Records Database")
+    iteration = 0
 
     # Creating a tree view for database
     my_tree = ttk.Treeview(showrec)
@@ -103,56 +97,54 @@ def show_records():
     my_cursor.execute("SELECT name,email,balance,user_id FROM Management.users;")
     result = my_cursor.fetchall()
     for row in result:
-        if(row[counter+2]==None):
+        if(row[2]==None):
             my_tree.insert(parent='', index='end', iid=iteration, text="",
-                           values=(row[counter + 3], row[counter], row[counter + 1], "N/A"))
+                           values=(row[3], row[0], row[1], "N/A"))
             iteration = iteration + 1
         else:
             my_tree.insert(parent='', index='end', iid=iteration, text="",
-                           values=(row[counter + 3], row[counter], row[counter + 1], row[counter + 2]))
+                           values=(row[3], row[0], row[1], row[2]))
             iteration = iteration + 1
     my_tree.grid(row=1, column=0)
-    iteration=0
     showrec.mainloop()
+    return iteration
 
 #Inserting data into the table
 def registration():
-    global flag
-    global counter
-    insert = "INSERT INTO users(name,email,password) VALUES (%s,%s,%s);"
-    record = (Entry_username.get(), Entry_email.get(), Entry_password.get())
-    my_cursor.execute("SELECT name, email, password FROM Management.users;")
-    result = my_cursor.fetchall()
-    if (Entry_username.get() != "" or Entry_email.get() != "" or Entry_password.get() != ""):
-        for row in result:
-            if(Entry_email.get()==row[counter+1]):
-                messagebox.showinfo("Failed!", "     Entry already exists!      ")
-                break
-            elif('@' not in Entry_email.get()):
-                messagebox.showinfo("Failed","         Invalid Email!         ")
-                break
-            else:
-                pass
-        else:
-            my_cursor.execute(insert, record)
-            mydb.commit()
-            Entry_username.delete(0, 'end')
-            Entry_email.delete(0, 'end')
-            Entry_password.delete(0, 'end')
-            Entry_username.focus_set()
-            messagebox.showinfo("Successful", "     Registration Completed!    ")
-    else:
-            messagebox.showinfo("Failed!", "          Empty Fields!         ")
     counter=0
-    flag=False
+    class register:
+        def __init__(self,master,e1,e2,e3):
+            record = (e2,)
+            my_cursor.execute("SELECT email FROM Management.users WHERE email=(%s);", record)
+            result = my_cursor.fetchone()
+            if (e1 != "" and e2 != "" and e3 != ""):
+                if ('@' in e2):
+                    if (result == None):
+                        insert = "INSERT INTO users(name,email,password) VALUES (%s,%s,%s);"
+                        record = (e1, e2, e3)
+                        my_cursor.execute(insert, record)
+                        mydb.commit()
+                        Entry_username.focus_set()
+                        messagebox.showinfo("Successful!", "     Registration Completed!    ")
+                    elif (Entry_email.get() in result[0]):
+                        messagebox.showinfo("Failed!", "Entry already exists!")
+                    else:
+                        messagebox.showinfo("Failed!", "Something Went Wrong!")
+                else:
+                    messagebox.showinfo("Failed!", "Invalid Email!")
+            else:
+                messagebox.showinfo("Failed!", "Empty Fields!!")
+    res=register(manage,Entry_username.get(),Entry_email.get(),Entry_password.get())
+    return counter
+
 
 #Declaring Empty Label to store data in global scope
 bal0=Label()
 
 #Logging in the user
 def login():
-    global counter
     global flag
+    counter=0
     my_cursor.execute("SELECT name, email, password FROM Management.users;")
     result = my_cursor.fetchall()
 
@@ -306,15 +298,15 @@ def login():
             depo = Button(logged, text="Deposit", command=deposit,padx=2,pady=2,bg="dark sea green")
             depo.grid(row=5, column=1)
             Reset = Button(logged, text="Reset", command=reset,padx=2,pady=2,bg="dark sea green")
-            Reset.grid(row=5, column=2)
+            Reset.grid(row=7, column=0)
             logged.mainloop()
         else:
             messagebox.showinfo("Warning!", "Invalid Login!")
 
     else:
         messagebox.showinfo("Failed!", "          Empty Fields!         ")
-    counter=0
     flag=False
+    return flag
 
 #Empty Labels to configure Buttons
 Label1=Label(manage,text="",bg="cornflower blue")
@@ -330,7 +322,3 @@ rec.grid(row=5,column=0)
 
 #Putting main GUI in a loop
 manage.mainloop()
-
-#Close connection of database and cursor
-my_cursor.close()
-mydb.close()
