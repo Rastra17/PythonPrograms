@@ -119,7 +119,6 @@ def show_records():
 
 #Inserting data into the table
 def registration():
-    counter=0
     class register:
         def __init__(self,master,e1,e2,e3):
             record = (e2,)
@@ -142,9 +141,7 @@ def registration():
                     messagebox.showinfo("Failed!", "Invalid Email!")
             else:
                 messagebox.showinfo("Failed!", "Empty Fields!!")
-    res=register(manage,Entry_username.get(),Entry_email.get(),Entry_password.get())
-    return counter
-
+    register(manage,Entry_username.get(),Entry_email.get(),Entry_password.get())
 
 #Declaring Empty Label to store data in global scope
 bal0=Label()
@@ -203,78 +200,84 @@ def login():
             def deposit():
                 global bal0
                 bal0.destroy()
-                if (int(balance.get()) > 0):
-                    bal = balance.get()
-                    erms = (entries[0], entries[1])
-                    my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s) AND password=(%s);",
-                                      erms)
-                    resul = my_cursor.fetchone()
-                    if (resul[0] == None):
-                        sel = (bal, entries[0], entries[1])
-                        my_cursor.execute(
-                            "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", sel)
-                        mydb.commit()
-                        my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
-                        resultone = my_cursor.fetchone()
-                        bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18,bg="firebrick1")
-                        bal0.grid(row=1, column=0)
-                        messagebox.showinfo("Successful!", "Added Balance to Account!")
-                    elif (int(balance.get()) > 0):
-                        bal = int(bal)
-                        resul = resul[0]
-                        resul = int(resul)
-                        sum = resul + bal
-                        update = (sum, entries[0], entries[1])
-                        my_cursor.execute(
-                            "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", update)
-                        mydb.commit()
-                        my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
-                        resultone = my_cursor.fetchone()
-                        bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18,bg="firebrick1")
-                        bal0.grid(row=1, column=0)
-                        messagebox.showinfo("Successful!", "Updated Balance to Account!")
+                if (balance.get() != ""):
+                    if (int(balance.get()) > 0):
+                        bal = balance.get()
+                        erms = (entries[0], entries[1])
+                        my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s) AND password=(%s);",
+                                          erms)
+                        resul = my_cursor.fetchone()
+                        if (resul[0] == None):
+                            sel = (bal, entries[0], entries[1])
+                            my_cursor.execute(
+                                "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", sel)
+                            mydb.commit()
+                            my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
+                            resultone = my_cursor.fetchone()
+                            bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18, bg="firebrick1")
+                            bal0.grid(row=1, column=0)
+                            messagebox.showinfo("Successful!", "Added Balance to Account!")
+                        elif (int(balance.get()) > 0):
+                            bal = int(bal)
+                            resul = resul[0]
+                            resul = int(resul)
+                            sum = resul + bal
+                            update = (sum, entries[0], entries[1])
+                            my_cursor.execute(
+                                "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", update)
+                            mydb.commit()
+                            my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
+                            resultone = my_cursor.fetchone()
+                            bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18, bg="firebrick1")
+                            bal0.grid(row=1, column=0)
+                            messagebox.showinfo("Successful!", "Updated Balance to Account!")
+                        else:
+                            messagebox.showinfo("Warning", "Something went wrong!")
                     else:
-                        messagebox.showinfo("Warning", "Something went wrong!")
+                        messagebox.showinfo("Warning", "Enter a number!")
                 else:
-                    messagebox.showinfo("Warning", "Enter a number!")
+                    messagebox.showinfo("Warning!","Empty Balance field!")
 
             # Function to withdraw
             def withdraw():
                 global bal0
                 bal0.destroy()
-                if (int(balance.get()) > 0):
-                    bal = balance.get()
-                    erms = (entries[0], entries[1])
-                    my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s) AND password=(%s);",
-                                      erms)
-                    resul = my_cursor.fetchone()
-                    if (resul[0] == None):
-                        bal = bal * -1
-                        sel = (bal, entries[0], entries[1])
-                        my_cursor.execute(
-                            "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", sel)
-                        mydb.commit()
-                        bal0 = Label(logged, text="Balance: " + str(resul[0]), font=18)
-                        bal0.grid(row=1, column=0)
-                        messagebox.showinfo("Successful!", "Updated Balance from Account!")
-                    elif (int(balance.get()) > 0 and int(balance.get())<=resul[0]):
-                        bal = int(bal)
-                        resul = resul[0]
-                        resul = int(resul)
-                        sum = resul - bal
-                        update = (sum, entries[0], entries[1])
-                        my_cursor.execute(
-                            "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", update)
-                        mydb.commit()
-                        my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
-                        resultone = my_cursor.fetchone()
-                        bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18)
-                        bal0.grid(row=1, column=0)
-                        messagebox.showinfo("Successful!", "Updated Balance from Account!")
+                if (balance.get()!=""):
+                    if (int(balance.get()) > 0):
+                        bal = balance.get()
+                        erms = (entries[0], entries[1])
+                        my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s) AND password=(%s);",
+                                          erms)
+                        resul = my_cursor.fetchone()
+                        if (resul[0] == None):
+                            bal = bal * -1
+                            sel = (bal, entries[0], entries[1])
+                            my_cursor.execute(
+                                "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", sel)
+                            mydb.commit()
+                            bal0 = Label(logged, text="Balance: " + str(resul[0]), font=18)
+                            bal0.grid(row=1, column=0)
+                            messagebox.showinfo("Successful!", "Updated Balance from Account!")
+                        elif (int(balance.get()) > 0 and int(balance.get()) <= resul[0]):
+                            bal = int(bal)
+                            resul = resul[0]
+                            resul = int(resul)
+                            sum = resul - bal
+                            update = (sum, entries[0], entries[1])
+                            my_cursor.execute(
+                                "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", update)
+                            mydb.commit()
+                            my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
+                            resultone = my_cursor.fetchone()
+                            bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18)
+                            bal0.grid(row=1, column=0)
+                            messagebox.showinfo("Successful!", "Updated Balance from Account!")
+                        else:
+                            messagebox.showinfo("Warning", "Not Enough Balance")
                     else:
-                        messagebox.showinfo("Warning", "Not Enough Balance")
+                        messagebox.showinfo("Warning", "Enter a number!")
                 else:
-                    messagebox.showinfo("Warning", "Enter a number!")
+                    messagebox.showinfo("Warning!","Empty Balance field!")
 
             # Deleting records from database
             def delete():
@@ -286,11 +289,14 @@ def login():
 
             # Resetting the password
             def reset():
-                erms = (rpas.get(), entries[0], entries[1])
-                my_cursor.execute("UPDATE Management.users SET password=(%s) WHERE email=(%s) AND password=(%s);",
-                                  erms)
-                mydb.commit()
-                messagebox.showinfo("Successful!", "The password has been reset!")
+                if (rpas.get() != ""):
+                    erms = (rpas.get(), entries[0], entries[1])
+                    my_cursor.execute("UPDATE Management.users SET password=(%s) WHERE email=(%s) AND password=(%s);",
+                                      erms)
+                    mydb.commit()
+                    messagebox.showinfo("Successful!", "The password has been reset!")
+                else:
+                    messagebox.showinfo("Warning!","Empty Reset Password field!")
 
             # Empty Labels to configure Buttons
             Label1 = Label(logged, text="",bg="salmon1")
