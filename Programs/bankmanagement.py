@@ -145,6 +145,7 @@ def registration():
 
 #Declaring Empty Label to store data in global scope
 bal0=Label()
+bal0.destroy()
 
 #Logging in the user
 def login():
@@ -214,7 +215,7 @@ def login():
                             mydb.commit()
                             my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
                             resultone = my_cursor.fetchone()
-                            bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18, bg="firebrick1")
+                            bal0 = Label(logged, text="Balance: " + str(resultone[0]),font=18,bg="salmon1")
                             bal0.grid(row=1, column=0)
                             messagebox.showinfo("Successful!", "Added Balance to Account!")
                         elif (int(balance.get()) > 0):
@@ -228,7 +229,7 @@ def login():
                             mydb.commit()
                             my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
                             resultone = my_cursor.fetchone()
-                            bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18, bg="firebrick1")
+                            bal0 = Label(logged, text="Balance: " + str(resultone[0]),font=18,bg="salmon1")
                             bal0.grid(row=1, column=0)
                             messagebox.showinfo("Successful!", "Updated Balance to Account!")
                         else:
@@ -255,7 +256,7 @@ def login():
                             my_cursor.execute(
                                 "UPDATE Management.users SET balance=(%s) WHERE email=(%s) AND password=(%s);", sel)
                             mydb.commit()
-                            bal0 = Label(logged, text="Balance: " + str(resul[0]), font=18)
+                            bal0 = Label(logged, text="Balance: " + str(resul[0]),font=18,bg="salmon1")
                             bal0.grid(row=1, column=0)
                             messagebox.showinfo("Successful!", "Updated Balance from Account!")
                         elif (int(balance.get()) > 0 and int(balance.get()) <= resul[0]):
@@ -269,7 +270,7 @@ def login():
                             mydb.commit()
                             my_cursor.execute("SELECT balance FROM Management.users WHERE email=(%s)", temp)
                             resultone = my_cursor.fetchone()
-                            bal0 = Label(logged, text="Balance: " + str(resultone[0]), font=18)
+                            bal0 = Label(logged, text="Balance: " + str(resultone[0]),font=18,bg="salmon1")
                             bal0.grid(row=1, column=0)
                             messagebox.showinfo("Successful!", "Updated Balance from Account!")
                         else:
