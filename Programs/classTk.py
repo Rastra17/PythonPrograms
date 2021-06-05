@@ -20,11 +20,11 @@ class Geto:
         self.miracle = miracle
 
     def get(self):
-        data = self.entry_Entry.get()
-        self.Display = tk.Label(self.root, text=data)
+        self.data = self.entry_Entry.get()
+        self.Display = tk.Label(self.root, text=self.data)
         self.Display.pack()
-        miracle.append(data)
-        return data
+        miracle.append(self.data)
+        return self.data
 
     def quit(self):
         self.root.destroy()
