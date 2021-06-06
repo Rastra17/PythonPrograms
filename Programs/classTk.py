@@ -24,7 +24,7 @@ class Geto:
         self.Display = tk.Label(self.root, text=self.data)
         self.Display.pack()
         miracle.append(self.data)
-        return self.data
+        return self.data[-1]
 
     def quit(self):
         self.root.destroy()
