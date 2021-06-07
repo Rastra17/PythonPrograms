@@ -8,3 +8,6 @@ class TEST(unittest.TestCase):
     def test_get(self):
         test = Geto(tk.Tk())
         self.assertEqual(test.miracle[-1], "Rastra")
+
+if __name__=='__main__':
+    unittest.main()
