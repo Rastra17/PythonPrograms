@@ -4,7 +4,7 @@ def function_name_print(a,b,c,d):
 print("This is a normal function:")
 function_name_print("Harry","Alex","Bell","Red\n")
 
-# Declaring *args function which takes multiple input within a function with correct position of arguments.
+# Declaring *args function which takes multiple input within a function.
 def funargs(strin,*args):
     lim=len(args)
     print(strin)
@@ -14,8 +14,7 @@ strin="This is an *args function:"
 lst=["Harry","Alex","Bell","Red","Rona\n"]
 funargs(strin,*lst)
 
-# Declaring **kwargs function which takes in multiple keys of a dictionary within a function with
-# correct position of arguments.
+# Declaring **kwargs function which takes in keys of a dictionary within a function.
 def funkwargs(strin,*args,**kwargs):
     lim=len(args)
     print(strin)
