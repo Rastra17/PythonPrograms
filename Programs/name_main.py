@@ -6,7 +6,7 @@ class App:
         self.sum=self.num1+self.num2
         print(self.sum)
 
-#__name__=='__main__' will make sure that this file will only run without disturbing other files when this file is imported
+#__name__=='__main__' will make sure that the code below will work only when this file will run.
 if __name__=='__main__':
     num1 = int(input("Enter 1st number:"))
     num2 = int(input("Enter 2nd number:"))
