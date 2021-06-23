@@ -121,14 +121,19 @@ def show_records():
 def registration():
     class register:
         def __init__(self,master,e1,e2,e3):
-            record = (e2,)
+            self.master=master
+            self.e1=e1
+            self.e2=e2
+            self.e3=e3
+        def rest(self):
+            record = (self.e2,)
             my_cursor.execute("SELECT email FROM Management.users WHERE email=(%s);", record)
             result = my_cursor.fetchone()
-            if (e1 != "" and e2 != "" and e3 != ""):
-                if ('@' in e2):
+            if (self.e1 != "" and self.e2 != "" and self.e3 != ""):
+                if ('@' in self.e2):
                     if (result == None):
                         insert = "INSERT INTO users(name,email,password) VALUES (%s,%s,%s);"
-                        record = (e1, e2, e3)
+                        record = (self.e1, self.e2, self.e3)
                         my_cursor.execute(insert, record)
                         mydb.commit()
                         Entry_username.focus_set()
@@ -141,7 +146,8 @@ def registration():
                     messagebox.showinfo("Failed!", "Invalid Email!")
             else:
                 messagebox.showinfo("Failed!", "Empty Fields!!")
-    register(manage,Entry_username.get(),Entry_email.get(),Entry_password.get())
+    display=register(manage,Entry_username.get(),Entry_email.get(),Entry_password.get())
+    display.rest()
 
 #Declaring Empty Label to store data in global scope
 bal0=Label()
