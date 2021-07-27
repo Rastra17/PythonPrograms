@@ -1,3 +1,5 @@
+#A program to check if a number is armstrong or not
+
 lim=int(input("Enter a limit:"))
 if(lim<=1000):
     for i in range(lim):

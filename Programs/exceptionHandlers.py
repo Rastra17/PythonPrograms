@@ -1,3 +1,5 @@
+#A program to implement exception handlers in python
+
 try:
     print("try will try to run this block if no errors are raised.")
 except Exception as e:

@@ -1,3 +1,5 @@
+#A program to create a basic GUI for practice
+
 #Import everything from tkinter
 from tkinter import *
 

@@ -1,4 +1,5 @@
-# WAP to find sum of elements of list using while loop.
+#A progrm to find sum of elements of list using while loop
+
 lst=[10,31,37,40,56,63,70]
 length=len(lst)
 i=0

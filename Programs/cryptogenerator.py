@@ -1,3 +1,5 @@
+#A program to generate codes when a string is provided and to decode that same string
+
 def choice():
     choice=int(input("Press (1) to Code your input\nPress (2) to Decode your input\nPress Any Key to Exit\nEnter your choice:"))
     if(choice==1):

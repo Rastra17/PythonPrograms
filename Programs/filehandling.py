@@ -1,3 +1,5 @@
+#A program to create, read and write on files
+
 f=open('writeread.txt','r+')
 r=f.read()
 strg='\nThank you for joining!'

@@ -1,3 +1,5 @@
+#A program to create GUI and store data for bank management system
+
 from tkinter import *
 import mysql.connector
 from tkinter import messagebox

@@ -1,3 +1,5 @@
+#A program to implement super method using inheritance
+
 class Rectangle:
     def __init__(self, length, width):
         self.length = length

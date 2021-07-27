@@ -1,3 +1,5 @@
+#A program to check conditions and give desired output
+
 price=1000000
 credit=True
 if(credit==True):

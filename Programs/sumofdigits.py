@@ -1,3 +1,5 @@
+#A program which calculates the sum of its digits
+
 put=int(input("Enter a 3 digit number:"))
 if(put>99 and put<999):
     d3 = put % 100

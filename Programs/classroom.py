@@ -1,4 +1,5 @@
-#WAP to calculate the distribution of desks in the least amount in 3 classrooms where 2 students can occupy a desk.
+#A program to calculate distribution of desks in a classroom
+
 def clsA(A):
     if(A%2==0):
         least = (A // 2)

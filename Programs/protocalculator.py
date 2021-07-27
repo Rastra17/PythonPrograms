@@ -1,85 +1,78 @@
-# Python program to create a simple GUI calculator using Tkinter
+#A program to create a simple GUI calculator using Tkinter
 
-# Import *(all) from tkinter library
+#Import all from tkinter library
 from tkinter import *
 
-# Var variable declared on global scope
+#Var variable declared on global scope
 Var = ""
 
 
-# Function to update Var
+#Function to update Var
 def press(num):
-    # To point global variable
+    #To point global variable
     global Var
 
-    # Joining the strings(Concatenation)
+    #Joining the strings(Concatenation)
     Var = Var + str(num)
 
-    # Update the Var by using set method
+    #Update the Var by using set method
     equation.set(Var)
 
 
-# Function to evaluate the final Var
+#Function to evaluate the final Var
 def equalpress():
-    # Try and except statement being used to handle division by zero and other errors.
+    #Try and except statement being used to handle division by zero and other errors.
 
-    # Put that code inside the try block, which may generate the error
+    #Put that code inside the try block, which may generate the error
     try:
 
         global Var
 
-        # Eval function to evaluate Var and str function to convert result into string
+        #Eval function to evaluate Var and str function to convert result into string
         total = str(eval(Var))
 
         equation.set(total)
 
-        # Emptying the Var variable
+        #Emptying the Var variable
         Var = ""
 
-    # Errors handled by except, if any
+    #Errors handled by except, if any
     except:
 
         equation.set(" Error! ")
         Var = ""
 
 
-# Function to make use of the clear button in calculator
+#Function to make use of the clear button in calculator
 def clear():
     global Var
     Var = ""
     equation.set("")
 
 
-# Driver code
+#Driver code
 if __name__ == "__main__":
-    # For GUI
+    #For GUI
     gui = Tk()
 
-    # set the background colour of GUI window
+    #Set the background colour of GUI window
     gui.configure(background="grey")
 
-    # set the title of GUI window
+    #Set the title of GUI window
     gui.title("Prototype Calculator")
 
-    # Dimensions of the GUI
+    #Dimensions of the GUI
     gui.geometry("436x221")
 
-    # StringVar() is the variable class
-    # Creating an instance of this class
+    #StringVar() is the variable class
+    #Creating an instance of this class
     equation = StringVar()
 
-    # Create the text entry box showing the Var
+    #Create the text entry box showing the Var
     expression_field = Entry(gui, textvariable=equation)
 
-    # grid method is used for placing
-    # the widgets at respective positions
-    # in table like structure .
     expression_field.grid(columnspan=160, ipadx=280)
 
-    # create a Buttons and place at a particular
-    # location inside the root window .
-    # when user press the button, the command or
-    # function affiliated to that button is executed .
     button1 = Button(gui, text=' 1 ', fg='black', bg='white',
                      command=lambda: press(1), height=2, width=14)
     button1.grid(row=2, column=0)
@@ -147,5 +140,5 @@ if __name__ == "__main__":
     Decimal = Button(gui, text='.', fg='black', bg='light blue',
                      command=lambda: press('.'), height=2, width=14)
     Decimal.grid(row=6, column=0)
-    # start the GUI
+    #Loop the GUI
     gui.mainloop()

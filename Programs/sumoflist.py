@@ -1,3 +1,5 @@
+#A program which calculates the sum of list in python
+
 def sumoflist(lst):
     sum=0
     for i in lst:

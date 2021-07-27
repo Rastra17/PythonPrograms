@@ -1,3 +1,5 @@
+#A program to practice class which calculates the sum of 2 numbers
+
 class New:
     def __init__(self,inp,pro):
         self.inp=inp

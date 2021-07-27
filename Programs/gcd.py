@@ -1,3 +1,5 @@
+#A program to calculate the greatest common divisior of a number
+
 num1=int(input("Enter the first number:"))
 num2=int(input("Enter the second number:"))
 fac1=[]

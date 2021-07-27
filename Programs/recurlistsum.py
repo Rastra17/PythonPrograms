@@ -1,3 +1,5 @@
+#A program to print sum of elements in a list using recursion
+
 def add(lst,sum,i):
     length=len(lst)
     sum = sum + lst[i]

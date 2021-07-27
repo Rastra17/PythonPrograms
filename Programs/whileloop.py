@@ -1,4 +1,5 @@
-#WAP to print all the odd and even number with appropriate message from 1 to 50.
+#A program to print all the odd and even number with appropriate message from 1 to 50
+
 i=0
 while i<=50:
     if i%2==0:

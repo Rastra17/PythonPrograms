@@ -1,3 +1,5 @@
+#A program which converts seconds into its distribution of time
+
 sec=int(input("Enter the time in seconds:"))
 day=sec//86400
 hour=(sec-day*86400)//3600

@@ -1,3 +1,5 @@
+#A program to check if the name is long, short or good enough
+
 name=input("Enter your name:")
 length=len(name)
 if(length<=3):

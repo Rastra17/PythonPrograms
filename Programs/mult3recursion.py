@@ -1,3 +1,5 @@
+#A program to get table of any number until 10
+
 def multiply(n,i):
     product=n*i
     print(n,"X",i,"=",product)

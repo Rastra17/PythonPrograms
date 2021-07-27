@@ -1,3 +1,5 @@
+#A program to implement inheritance in python
+
 class Coder:
     def __init__(self,ethical,networking,computing):
         self.ethical=ethical

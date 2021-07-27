@@ -1,3 +1,5 @@
+#A program to print fibonacci series of n numbers
+
 def fibo(sum,mem,i):
     i=i+1
     print(sum)

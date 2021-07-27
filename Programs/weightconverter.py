@@ -1,3 +1,5 @@
+#A program to convert weight from pounds to kg and vice versa
+
 print("(1) Weight in kilograms.")
 print("(2) Weight in pounds.")
 choice=int(input("Enter your choice:"))

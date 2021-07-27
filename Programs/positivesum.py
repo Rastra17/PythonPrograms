@@ -1,3 +1,5 @@
+#A program to print the sum of first n positive integers
+
 num=int(input("Enter the limit of loop:"))
 sum=0
 for i in range(0,num+1):

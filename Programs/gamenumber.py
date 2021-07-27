@@ -1,3 +1,5 @@
+#A program to guess a number and print appropriate message if that guess correct or not
+
 a=5
 i=0
 while(i<3):

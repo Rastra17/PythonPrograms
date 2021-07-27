@@ -1,3 +1,5 @@
+#A progrm which sorts the elements in a list
+
 lst=[]
 limit=int(input("Enter the limit of list:"))
 for i in range(limit):

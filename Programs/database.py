@@ -1,3 +1,5 @@
+#A program to connect MySQL database with python
+
 import mysql.connector
 
 #Connecting python to MySQL Server

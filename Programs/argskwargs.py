@@ -1,3 +1,5 @@
+#A program to implement *args and **kwargs parameters
+
 # A normal no return, yes argument function
 def function_name_print(a,b,c,d):
     print(a,b,c,d)
