@@ -11,7 +11,8 @@ def funargs(strin,*args):
     lim=len(args)
     print(strin)
     for i in range(lim):
-        print(args[i])
+        print(args[i], end=' ')
+    print()
 strin="This is an *args function:"
 lst=["Harry","Alex","Bell","Red","Rona\n"]
 funargs(strin,*lst)
@@ -21,7 +22,8 @@ def funkwargs(strin,*args,**kwargs):
     lim=len(args)
     print(strin)
     for i in range(lim):
-        print(args[i])
+        print(args[i], end=' ')
+    print()
     for key,value in kwargs.items():
         print(f"{key} is a {value}")
 strin="This is a **kwargs function:"
