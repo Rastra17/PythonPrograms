@@ -29,9 +29,9 @@ def delete_files_in_folder(folder_path):
 
 # List of folders to delete files from
 folders = [
-    "C:\Users\rastr\Downloads\InputImages",
-    "C:\Users\rastr\Downloads\RemovedBG",
-    "C:\Users\rastr\Downloads\ProcessedImages"
+    r"C:\Users\rastr\Downloads\InputImages",
+    r"C:\Users\rastr\Downloads\RemovedBG",
+    r"C:\Users\rastr\Downloads\ProcessedImages"
 ]
 
 # Iterate through the folders and delete files
